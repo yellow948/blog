@@ -1,0 +1,85 @@
+{% extends 'myBlog/base.html' %}
+
+{% block custom_css %}
+<style type="text/css">
+  /*img {
+    width: 100px;
+    height: 100px;
+  }*/
+</style>
+{% endblock %}
+{% block content %}
+<div class="am-g am-g-fixed blog-fixed blog-content">
+  <div class="am-u-sm-12">
+    <article class="am-article blog-article-p">
+
+      <div class="am-article-hd">
+        <h1 class="am-article-title blog-text-center" id="title"></h1>
+        <p class="am-article-meta blog-text-center">
+            <span><a id="type"></a></span>-
+            <span><a id="author"></a></span>-
+            <span><a id="date"></a></span>
+        </p>
+      </div> 
+
+      <div class="am-article-bd">
+          <blockquote style="background-color: #F0F0F0;">
+            <p id="content">
+              
+            </p>
+          </blockquote>
+      </div>
+
+    </article>
+      
+
+    <div class="am-g blog-article-widget blog-article-margin">
+      <div class="am-u-lg-4 am-u-md-5 am-u-sm-7 am-u-sm-centered blog-text-center">
+        <br>
+        联系我
+        <hr>
+        <a onclick="callMe()" class="callMe"><span class="am-icon-qq am-icon-fw am-primary blog-icon"></span></a>
+        <a onclick="callMe()" class="callMe"><span class="am-icon-wechat am-icon-fw blog-icon"></span></a>
+      </div>
+    </div>
+    <hr>
+      
+
+    <form class="am-form am-g">
+
+      <h3 class="blog-comment">评论：</h3>
+      <fieldset>
+    
+        <div class="am-form-group">
+          <textarea class="" rows="5" placeholder="我有疑问."></textarea>
+        </div>
+    
+        <p><button type="submit" class="am-btn am-btn-default">发表评论</button></p>
+
+      </fieldset>
+    </form>
+    <hr>
+
+  </div>
+</div>
+{% endblock %}
+
+
+{% block custom_js %}
+  <script type="text/javascript">
+    // 获取url中的id
+    var url = window.location.href;
+    var id = url.split('/', 5)[4]
+    
+    $.post('/article/'+id+'/', function (data) {
+      console.log(data)
+      $('#title').html(data.data[0].title)
+      $('#type').html(data.data[0].type+"&nbsp")
+      $('#author').html(data.data[0].author+"&nbsp")
+      $('#date').html(data.data[0].date+"&nbsp")
+      $('#content').html(data.data[0].content)
+    });
+    
+    
+  </script>
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends 'myBlog/base.html' %}
+
+{% block content %}
+<div class="am-g am-g-fixed blog-fixed">
+    
+    <!-- article start -->
+    <div class="am-u-md-8 am-u-sm-12" >
+        <article class="am-g blog-entry-article">
+            <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-text" id="article">
+        
+            </div>
+        </article>
+ 
+        <ul class="am-pagination" style="text-align: center;">
+            <li><button class="am-btn am-btn-default" onclick="getArticle()" id="next">点击加载更多</button></li>
+        </ul>
+
+    </div>
+    <!-- article end -->
+
+
+
+    <div class="am-u-md-4 am-u-sm-12 blog-sidebar">
+
+        <div class="blog-clear-margin blog-sidebar-widget blog-bor am-g ">
+            <h2 class="blog-title"><span>Type</span></h2>
+            <div class="am-u-sm-12 blog-clear-padding am-active" id="sideType">
+              
+            </div>
+        </div>
+  
+
+        <div class="blog-sidebar-widget blog-bor">
+            <h2 class="blog-text-center blog-title"><span>Call Me</span></h2>
+            <p>
+              <a onclick="callMe()" class="callMe"><span class="am-icon-qq am-icon-fw am-primary blog-icon"></span></a>
+              <a onclick="callMe()" class="callMe"><span class="am-icon-wechat am-icon-fw blog-icon"></span></a>
+            </p>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+
+{% block custom_js %}
+    <script type="text/javascript">
+
+      // 记录页数
+      var index = 0;
+
+      // 获取文章
+      function getArticle() {
+        // 获取url中文章类型
+        var url = window.location.href;
+        var type = url.split('/', 5)[4];
+
+        // 解码文章类型
+        var sideType = decodeURI(type);
+
+        index++;
+        $('#sideType').html('<a href="" class="blog-tag">'+sideType+'</a>');
+
+        $.post('/type/'+type+'/', {'index':index}, function (data) {
+          if(data.status==200){
+            for(var i=0;i<(data.data).length;i++){
+              $('#article').append('<h1><a href="'+ data.data[i].url +'">' + data.data[i].title + '</a></h1><span><a href="/type/'+ data.data[i].type +'/" class="blog-color">' + data.data[i].type + ' &nbsp;</a></span><span> @' + data.data[i].author + ' &nbsp;</span><span>' + data.data[i].date + ' &nbsp;</span><p></p><hr>')
+            }
+          }else{
+            $('#next').attr("disabled", true)
+            $('#next').html('没有更多了')
+          }
+        });
+      }
+
+      getArticle()
+     
+
+    </script>
+{% endblock %}

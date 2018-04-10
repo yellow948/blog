@@ -1,0 +1,100 @@
+{% extends 'myBlog/base.html' %}
+
+{% block content %}
+<div class="am-g am-g-fixed blog-fixed">
+    
+    <!-- article start -->
+    <div class="am-u-md-8 am-u-sm-12">
+        <article class="am-g blog-entry-article">
+            <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-text" id="article">
+        
+            </div>
+        </article>
+ 
+        <ul class="am-pagination" style="text-align: center;">
+            <li><button class="am-btn am-btn-default" onclick="getArticle()" id="next">点击加载更多</button></li>
+        </ul>
+
+    </div>
+    <!-- article end -->
+
+
+
+    <div class="am-u-md-4 am-u-sm-12 blog-sidebar">
+
+        <!-- <div class="blog-sidebar-widget blog-bor">
+            <h2 class="blog-text-center blog-title"><span>About Me</span></h2>
+            <p>Blog</p>
+            <p>You can say what you want!</p>
+        </div> -->
+        
+        <div class="blog-clear-margin blog-sidebar-widget blog-bor am-g ">
+            <h2 class="blog-title"><span>Type</span></h2>
+            <div class="am-u-sm-12 blog-clear-padding">
+              <a href="/type/专业知识/" class="blog-tag">Profession</a>
+              <a href="/type/生活纪实/" class="blog-tag">Life</a>
+              <a href="/type/旅游/" class="blog-tag">Tour</a>
+              <a href="/type/社交/" class="blog-tag">Social</a>
+              <a href="/type/摄影/" class="blog-tag">Photograph</a>
+            
+            </div>
+        </div>
+
+        <!-- <div class="blog-sidebar-widget blog-bor">
+            <h2 class="blog-text-center blog-title"><span>Action</span></h2>
+            <a href="organize.html"><button class="am-btn-danger am-btn-xl" type="button">我也要发表文章</button></a>
+            <br><br>
+        </div> -->
+        
+        <!-- <div class="blog-sidebar-widget blog-bor">
+            <h2 class="blog-title"><span>Recently</span></h2>
+            <ul class="am-list">
+                <li><a href="#">每个人都有一个死角， 自己走不出来，别人也闯不进去。</a></li>
+                <li><a href="#">我把最深沉的秘密放在那里。</a></li>
+                <li><a href="#">你不懂我，我不怪你。</a></li>
+                <li><a href="#">每个人都有一道伤口， 或深或浅，盖上布，以为不存在。</a></li>
+                <li><a href="#">愿你的脚步能引领你走向内心呼唤的地方</a></li>
+            </ul>
+        </div> -->
+
+        <div class="blog-sidebar-widget blog-bor">
+            <h2 class="blog-text-center blog-title"><span>Call Me</span></h2>
+            <p>
+              <a onclick="callMe()" class="callMe"><span class="am-icon-qq am-icon-fw am-primary blog-icon"></span></a>
+              <a onclick="callMe()" class="callMe"><span class="am-icon-wechat am-icon-fw blog-icon"></span></a>
+            </p>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+
+{% block custom_js %}
+    <script type="text/javascript">
+
+      // 记录页数
+      var index = 0;
+
+      // 获取文章
+      function getArticle() {
+        index++;
+        $.post('/', {'index':index}, function (data) {
+          if(data.status==200){
+            for(var i=0;i<(data.data).length;i++){
+              $('#article').append('<h1><a href="'+ data.data[i].url +'">' + data.data[i].title + '</a></h1><span><a href="/type/'+ data.data[i].type +'/" class="blog-color">' + data.data[i].type + ' &nbsp;</a></span><span> @' + data.data[i].author + ' &nbsp;</span><span>' + data.data[i].date + ' &nbsp;</span><p></p><hr>')
+            }
+          }else{
+            $('#next').attr("disabled", true)
+            $('#next').html('没有更多了')
+          }
+        });
+      }
+
+      getArticle()
+      
+      // 给导航栏添加css
+      $("#index").addClass("am-active")
+
+    </script>
+{% endblock %}

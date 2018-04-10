@@ -1,0 +1,113 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+  <title>{% block title %}文章{% endblock %}</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-siteapp"/>
+  <link rel="icon" type="image/png" href="assets/i/favicon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="icon" sizes="192x192" href="assets/i/app-icon72x72@2x.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
+  <link rel="apple-touch-icon-precomposed" href="assets/i/app-icon72x72@2x.png">
+  <meta name="msapplication-TileImage" content="assets/i/app-icon72x72@2x.png">
+  <meta name="msapplication-TileColor" content="#0e90d2">
+
+  <link rel="stylesheet" href="https://cdn.bootcss.com/amazeui/2.7.2/css/amazeui.min.css">
+  <link rel="stylesheet" href="http://yellow948.cn/amaze/css/app.css">
+    {% block custom_css %}
+    {% endblock %}
+</head>
+
+<div id="blog-article-sidebar">
+
+  <header class="am-g am-g-fixed blog-fixed blog-text-center blog-header">
+      <div class="am-u-sm-8 am-u-sm-centered">
+          {% block h1 %}
+          <!-- <img width="200" src="logo.png" alt="Logo"/> -->
+          <h2 class="am-hide-sm-only">个人博客</h2>
+          {% endblock %}
+      </div>
+  </header>
+  <hr>
+
+
+  <nav class="am-g am-g-fixed blog-fixed blog-nav">
+    <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only blog-button" data-am-collapse="{target: '#blog-collapse'}" ><span class="am-sr-only">导航切换</span> <span class="am-icon-bars"></span>
+    </button>
+
+    <div class="am-collapse am-topbar-collapse" id="blog-collapse">
+      <ul class="am-nav am-nav-pills am-topbar-nav">
+        <li id="index"><a href="http://127.0.0.1:8000">首页</a></li>
+        <li class="am-dropdown" data-am-dropdown id="base_type">
+          <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
+            类型 <span class="am-icon-caret-down"></span>
+          </a>
+          <ul class="am-dropdown-content">          
+            <li><a href="/type/专业知识/">专业知识</a></li>
+            <li><a href="/type/生活纪实/">生活纪实</a></li>
+            <li><a href="/type/旅游/">旅游</a></li>
+            <li><a href="/type/社交/">社交</a></li>
+            <li><a href="/type/摄影/">摄影</a></li>
+          </ul>
+        </li>
+        <li id="push"><a href="/push/">发表文章</a></li>
+      </ul>
+      
+      {% block search %}
+      <form class="am-topbar-form am-topbar-right am-form-inline" role="search">
+        <div class="am-form-group">
+          <input type="text" class="am-form-field am-input-sm" placeholder="文章标题" id="searchTitle">
+          <input type="button" value="搜索" class="am-btn am-btn-default" onclick="search()">
+        </div>
+      </form>
+      {% endblock %}
+    </div>
+  </nav>
+  <hr>
+
+    {% block content %}
+    {% endblock %}
+</div>
+<footer class="blog-footer">
+  <div class="blog-text-center">© Yellow</div>
+</footer>
+
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/amazeui/2.7.2/js/amazeui.min.js"></script>
+<script src="https://cdn.bootcss.com/layer/3.1.0/layer.js"></script>
+<script type="text/javascript">
+
+  function search() {
+    var title = $("#searchTitle").val()
+    $.post('/search/', {'title': title}, function (data) {
+      // 清空内容
+      $('#article').html('')
+
+      // 设置不可下拉
+      $('#next').attr("disabled", true)
+      $('#next').html('没有更多了')
+      if(data.status==200){
+        for(var i=0;i<(data.data).length;i++){
+          $('#article').append('<h1><a href="'+ data.data[i].url +'">' + data.data[i].title + '</a></h1><span><a href="/type/'+ data.data[i].type +'/" class="blog-color">' + data.data[i].type + ' &nbsp;</a></span><span> @' + data.data[i].author + ' &nbsp;</span><span>' + data.data[i].date + ' &nbsp;</span><p></p><hr>')
+        }
+      }
+    })
+  }
+
+  function callMe() {
+      layer.tips('305034379', '.callMe');
+    }
+
+</script>
+{% block custom_js %}
+{% endblock %}
+</body>
+</html>
