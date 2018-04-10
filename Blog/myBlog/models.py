@@ -10,6 +10,7 @@ class Article(models.Model):
     author = models.CharField(verbose_name='作者', max_length=20)
     date = models.CharField(verbose_name='发布时间', max_length=20)
     type = models.CharField(verbose_name='文章类型', max_length=20)
+    
 
 
 
